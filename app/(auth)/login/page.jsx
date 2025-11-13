@@ -1,26 +1,28 @@
 'use client'
 
-import { login } from '@/lib/actions'
+import { login, resendConfirmationEmail } from '@/lib/actions'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 
-export default function LoginPage() {
+// Componente separado que usa useSearchParams
+function LoginForm() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [success, setSuccess] = useState(null)
+  const [showResend, setShowResend] = useState(false)
+  const [resendEmail, setResendEmail] = useState('')
+  const [resendLoading, setResendLoading] = useState(false)
   const router = useRouter()
   const searchParams = useSearchParams()
   const supabase = createClientComponentClient()
 
   useEffect(() => {
-    // Verificar si viene de confirmación de email
     if (searchParams.get('verified') === 'true') {
       setSuccess('¡Cuenta verificada! Ya puedes iniciar sesión')
     }
 
-    // Verificar si ya hay sesión activa
     checkSession()
   }, [searchParams])
 
@@ -36,20 +38,45 @@ export default function LoginPage() {
     setError(null)
     setSuccess(null)
 
+    const email = formData.get('email')
     const result = await login(formData)
 
     if (result?.error) {
       setError(result.error)
+      
+      if (result.error.includes('confirma tu correo')) {
+        setShowResend(true)
+        setResendEmail(email)
+      }
+      
       setLoading(false)
       return
     }
 
-    // El middleware redirigirá automáticamente
     router.push('/dashboard')
     router.refresh()
   }
 
-return (
+  async function handleResendEmail() {
+    if (!resendEmail) return
+    
+    setResendLoading(true)
+    setError(null)
+    setSuccess(null)
+
+    const result = await resendConfirmationEmail(resendEmail)
+
+    if (result.error) {
+      setError(result.error)
+    } else {
+      setSuccess(result.message)
+      setShowResend(false)
+    }
+
+    setResendLoading(false)
+  }
+
+  return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
         <div className="text-center mb-8">
@@ -88,6 +115,21 @@ return (
           </div>
         )}
 
+        {showResend && (
+          <div className="mb-6 p-4 bg-yellow-50 border-l-4 border-yellow-500 rounded-r-lg">
+            <p className="text-yellow-800 text-sm mb-3">
+              ¿No recibiste el correo de confirmación?
+            </p>
+            <button
+              onClick={handleResendEmail}
+              disabled={resendLoading}
+              className="w-full px-4 py-2 bg-yellow-600 text-white text-sm rounded-lg hover:bg-yellow-700 disabled:bg-yellow-300 disabled:cursor-not-allowed transition"
+            >
+              {resendLoading ? 'Reenviando...' : 'Reenviar correo de confirmación'}
+            </button>
+          </div>
+        )}
+
         <form action={handleSubmit} className="space-y-6">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
@@ -112,7 +154,7 @@ return (
               id="password"
               name="password"
               type="password"
-              placeholder="***********"
+              placeholder="••••••••"
               required
               autoComplete="current-password"
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
@@ -141,12 +183,28 @@ return (
         <div className="mt-6 text-center">
           <p className="text-gray-600">
             ¿No tienes cuenta?{' '}
-            <Link href="/sign-up" className="text-blue-600 hover:text-blue-700 font-semibold">
-              Regí­strate aquí­
+            <Link href="/signup" className="text-blue-600 hover:text-blue-700 font-semibold">
+              Regístrate aquí
             </Link>
           </p>
         </div>
       </div>
     </div>
+  )
+}
+
+// Componente principal exportado con Suspense
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Cargando...</p>
+        </div>
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   )
 }
