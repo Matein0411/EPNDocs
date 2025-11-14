@@ -2,7 +2,7 @@
 
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import Link from 'next/link'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { Suspense, useEffect, useState } from 'react'
 import { login } from "../actions/auth"
 
@@ -11,16 +11,11 @@ function LoginForm() {
   const [error, setError] = useState(null)
   const [success, setSuccess] = useState(null)
   const router = useRouter()
-  const searchParams = useSearchParams()
   const supabase = createClientComponentClient()
 
   useEffect(() => {
-    if (searchParams.get('verified') === 'true') {
-      setSuccess('¡Cuenta verificada! Ya puedes iniciar sesión')
-    }
-
     checkSession()
-  }, [searchParams])
+  }, [])
 
   async function checkSession() {
     const { data: { session } } = await supabase.auth.getSession()
