@@ -1,10 +1,10 @@
 'use client'
 
-import { login, resendConfirmationEmail } from '@/lib/actions'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Suspense, useEffect, useState } from 'react'
+import { login, resendEmailConfirmation } from "../actions/auth"
 
 // Componente separado que usa useSearchParams
 function LoginForm() {
@@ -64,7 +64,7 @@ function LoginForm() {
     setError(null)
     setSuccess(null)
 
-    const result = await resendConfirmationEmail(resendEmail)
+    const result = await resendEmailConfirmation(resendEmail)
 
     if (result.error) {
       setError(result.error)
