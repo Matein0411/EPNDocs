@@ -3,9 +3,7 @@
 import { logout } from '../(auth)/actions/auth';
 
 export default function WorkingPage() {
-  async function handleLogout() {
-    await logout();
-  }
+
   return (
 
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 px-4 relative overflow-hidden">
