@@ -189,7 +189,9 @@ export default function SignupPage() {
               'Resend Email'
             )}
           </button>
-          <a  href="/login" className='w-full bg-slate-800 text-white py-3 rounded-xl font-semibold hover:bg-slate-900 transition'>Go to Login</a>
+          <a href="/login" className='w-full bg-slate-800 text-white py-3 rounded-xl font-semibold hover:bg-slate-900 transition block text-center'>
+        Go to Login
+          </a>
         </div>
       </div>
     )
@@ -280,7 +282,7 @@ return (
                 onChange={handleInputChange}
                 placeholder="Juan Pérez López"
                 required
-                className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-slate-800 focus:border-transparent outline-none transition bg-white"
+                className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-slate-800 focus:border-transparent outline-none transition bg-white text-slate-600"
               />
             </div>
 
@@ -296,7 +298,7 @@ return (
                 onChange={handleInputChange}
                 placeholder="first.last@epn.edu.ec"
                 required
-                className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-slate-800 focus:border-transparent outline-none transition bg-white"
+                className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-slate-800 focus:border-transparent outline-none transition bg-white text-slate-600"
               />
             </div>
 
@@ -310,7 +312,7 @@ return (
                 value={formData.career}
                 onChange={handleInputChange}
                 required
-                className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-slate-800 focus:border-transparent outline-none transition bg-white"
+                className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-slate-800 focus:border-transparent outline-none transition bg-white text-slate-600"
               >
                 <option value="">Select your career</option>
                 {CAREERS.map((career) => (
@@ -335,7 +337,7 @@ return (
                   placeholder="Minimum 9 characters"
                   required
                   minLength={9}
-                  className="w-full px-4 py-3 pr-12 border border-slate-300 rounded-xl focus:ring-2 focus:ring-slate-800 focus:border-transparent outline-none transition bg-white"
+                  className="w-full px-4 py-3 pr-12 border border-slate-300 rounded-xl focus:ring-2 focus:ring-slate-800 focus:border-transparent outline-none transition bg-white text-slate-600"
                 />
                 <button
                   type="button"
@@ -370,7 +372,7 @@ return (
                   placeholder="Repeat your password"
                   required
                   minLength={9}
-                  className="w-full px-4 py-3 pr-12 border border-slate-300 rounded-xl focus:ring-2 focus:ring-slate-800 focus:border-transparent outline-none transition bg-white"
+                  className="w-full px-4 py-3 pr-12 border border-slate-300 rounded-xl focus:ring-2 focus:ring-slate-800 focus:border-transparent outline-none transition bg-white text-slate-600"
                 />
                 <button
                   type="button"

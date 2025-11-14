@@ -1,9 +1,9 @@
 'use client'
 
-import { logout } from '@/lib/actions'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { logout } from '../(auth)/actions/auth'
 
 export default function DashboardPage() {
   const [user, setUser] = useState(null)

@@ -13,7 +13,6 @@ export async function GET(request) {
     try {
       await supabase.auth.exchangeCodeForSession(code)
       
-      // Redirigir al dashboard con parámetro de éxito
       return NextResponse.redirect(`${requestUrl.origin}/login?verified=true`)
     } catch (error) {
       console.error('Error en auth callback:', error)
