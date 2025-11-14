@@ -1,5 +1,13 @@
+"use client"
+
+import { logout } from '../(auth)/actions/auth';
+
 export default function WorkingPage() {
+  async function handleLogout() {
+    await logout();
+  }
   return (
+
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 px-4 relative overflow-hidden">
       {/* Google Fonts */}
       <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
@@ -48,6 +56,11 @@ export default function WorkingPage() {
           <p className="text-slate-700 text-sm">
             <span className="font-semibold">Coming soon:</span> Dashboard, document sharing, and more!
           </p>
+        </div>
+        <div className="flex justify-center m-2">
+            <button className="bg-slate-700 cursor-pointer text-white px-4 py-2 rounded align-middle block" onClick={handleLogout}>
+              Log Out
+            </button>
         </div>
       </div>
     </div>
