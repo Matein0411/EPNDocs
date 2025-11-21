@@ -1,5 +1,6 @@
 "use client"
 
+import Link from 'next/link'
 import { logout } from '../(auth)/actions/auth';
 
 export default function WorkingPage() {
@@ -55,16 +56,23 @@ export default function WorkingPage() {
             <span className="font-semibold">Coming soon:</span> Dashboard, document sharing, and more!
           </p>
         </div>
-        <div className="flex justify-center mt-6">
+
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8">
+          <Link
+            href="/user"
+            className="inline-flex items-center justify-center bg-slate-800 hover:bg-slate-900 text-white px-6 py-3 rounded-xl font-semibold transition shadow-lg shadow-slate-800/20"
+          >
+            Subir archivos
+          </Link>
           <form action={logout}>
             <button 
               type="submit"
-              className="bg-slate-700 hover:bg-slate-800 cursor-pointer text-white px-6 py-2.5 rounded-xl font-semibold transition shadow-lg"
+              className="bg-white hover:bg-slate-50 text-slate-800 px-6 py-3 rounded-xl font-semibold transition shadow-lg border border-slate-200 cursor-pointer"
             >
               Log Out
-        </button>
-        </form>
-      </div>
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   )

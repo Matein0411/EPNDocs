@@ -2,22 +2,7 @@
 
 import { useState } from 'react'
 import { resendEmailConfirmation, signUp } from "../actions/auth"
-
-const CAREERS = [
-  'Ingeniería en Sistemas',
-  'Ingeniería Civil',
-  'Ingeniería Eléctrica',
-  'Ingeniería Electrónica',
-  'Ingeniería Mecánica',
-  'Ingeniería Química',
-  'Ingeniería Industrial',
-  'Ingeniería en Telecomunicaciones',
-  'Ingeniería Geológica',
-  'Ingeniería Ambiental',
-  'Física',
-  'Matemática',
-  'Otra'
-]
+import { CAREERS } from "../../user/constants"
 
 export default function SignupPage() {
   const [loading, setLoading] = useState(false)
