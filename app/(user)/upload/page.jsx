@@ -1,27 +1,55 @@
 "use client"
 
-import Link from 'next/link'
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { uploadDocument } from './actions/upload'
-import { RESOURCE_TYPES, SEMESTERS, CAREERS } from './constants'
+import { RESOURCE_TYPES, SEMESTERS } from './constants'
 
 const resourceOptions = RESOURCE_TYPES
 const semesterOptions = SEMESTERS
-const careerOptions = CAREERS
 
 export default function UserUploadPage() {
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState(null)
-  const [success, setSuccess] = useState(null)
+  const [success, setSuccess] = useState(false)
+  const [selectedFile, setSelectedFile] = useState(null)
+  
+  const fileInputRef = useRef(null)
 
   const resourceList = useMemo(() => resourceOptions, [])
   const semesterList = useMemo(() => semesterOptions, [])
-  const careerList = useMemo(() => careerOptions, [])
+
+  const formatSize = (bytes) => {
+    if (bytes === 0) return '0 B'
+    const k = 1024
+    const sizes = ['Bytes', 'KB', 'MB', 'GB']
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+  }
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      setSelectedFile(file)
+      setError(null)
+      setSuccess(false)
+    }
+  }
+
+  const triggerFileInput = () => {
+    fileInputRef.current?.click()
+  }
+
+  const removeFile = () => {
+    setSelectedFile(null)
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
+  }
 
   async function handleUpload(formData) {
     setUploading(true)
     setError(null)
-    setSuccess(null)
+    setSuccess(false)
 
     const result = await uploadDocument(formData)
 
@@ -31,62 +59,25 @@ export default function UserUploadPage() {
       return
     }
 
-    setSuccess({
-      message: result.message,
-      url: result.url,
-      title: result.title,
-      meta: {
-        subject: result.subject,
-        resourceType: result.resourceType,
-        semester: result.semester,
-        career: result.career
-      }
-    })
+    setSuccess(true)
     setUploading(false)
+    removeFile()
   }
 
   return (
     <div className="min-h-screen bg-slate-100">
-      <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
-
-      <header className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between px-5 md:px-10 py-6">
-        <div className="flex items-center gap-3">
-          <div className="w-11 h-11 bg-gradient-to-br from-slate-700 to-slate-900 rounded-xl flex items-center justify-center overflow-hidden shadow">
-            <img src="/favicon.ico" alt="EPNDocs Logo" className="w-full h-full object-contain" />
-          </div>
-          <div>
-            <p className="text-xs uppercase tracking-[0.18em] text-slate-500 font-semibold">EPNDocs</p>
-            <h1 className="text-xl font-bold text-slate-900 leading-tight">Subir archivo</h1>
-           
-          </div>
+      <header className="flex items-center justify-center gap-3 px-5 md:px-10 py-4 border-b border-slate-200 bg-slate-200">
+        <div className="w-11 h-11 bg-gradient-to-br from-slate-700 to-slate-900 rounded-xl flex items-center justify-center overflow-hidden shadow">
+          <img src="/favicon.ico" alt="EPNDocs Logo" className="w-full h-full object-contain" />
         </div>
-        <div className="flex items-center gap-3">
-          <Link
-            href="/dashboard"
-            className="px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 font-semibold hover:bg-slate-50 transition shadow-sm"
-          >
-            Volver al dashboard
-          </Link>
-        </div>
+           <a href="/dashboard"><h1 className='font-bold leading-light text-xl'>EPNDocs</h1></a>
       </header>
 
-      <main className="px-5 md:px-10 pb-12">
+      <main className="px-5 md:px-10 pb-12 mt-6">
         <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-xl border border-slate-200 p-6 md:p-8">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <p className="text-xs uppercase tracking-[0.14em] text-slate-500 font-semibold">Formulario</p>
-              <h2 className="text-2xl font-bold text-slate-900">Detalle del documento</h2>
-              <p className="text-sm text-slate-600">Agrega materia, tipo, semestre y archivo.</p>
-            </div>
-            <Link
-              href="/user"
-              className="inline-flex items-center gap-2 text-sm text-slate-700 font-semibold hover:text-slate-900"
-            >
-              
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </Link>
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold text-slate-900">Detalles del documento</h2>
+            <p className="text-sm text-slate-600">Agrega materia, tipo, semestre y archivo.</p>
           </div>
 
           {error && (
@@ -96,18 +87,70 @@ export default function UserUploadPage() {
           )}
 
           {success && (
-            <div className="mb-4 p-4 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-800 text-sm space-y-1">
-              <p className="font-semibold">{success.message}</p>
-              <p className="text-emerald-700 break-all">{success.title}{success.url ? ` -> ${success.url}` : ''}</p>
-              <p className="text-emerald-700">
-                {success.meta.subject} | {success.meta.resourceType} | {success.meta.semester} | {success.meta.career}
-              </p>
+            <div className="mb-4 p-4 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-800 text-sm font-semibold flex items-center gap-2">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              Documento subido exitosamente
             </div>
           )}
 
-          <form action={handleUpload} className="space-y-5" encType="multipart/form-data">
-            <div className="grid md:grid-cols-3 gap-4">
-              <div className="space-y-2 md:col-span-2">
+          <form action={handleUpload} className="space-y-5">
+            
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-slate-700">Archivo</label>
+
+              <input
+                ref={fileInputRef}
+                name="file"
+                type="file"
+                accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,.png,.jpg,.jpeg"
+                className="hidden"
+                onChange={handleFileChange}
+                required 
+              />
+
+              {!selectedFile ? (
+                <div 
+                  onClick={triggerFileInput}
+                  className="flex flex-col items-center justify-center w-full border-2 border-dashed border-slate-300 rounded-2xl px-6 py-8 bg-slate-50 hover:bg-slate-100 cursor-pointer transition"
+                >
+                  <svg className="w-10 h-10 text-slate-700 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v14m7-7H5" />
+                  </svg>
+                  <p className="text-slate-900 font-semibold">Selecciona o arrastra un archivo</p>
+                  <p className="text-sm text-slate-500">PDF, DOCX, PPTX, TXT, PNG, JPG. Max 20MB.</p>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between w-full border border-slate-300 rounded-2xl p-4 bg-slate-50">
+                  <div className="flex items-center gap-4 overflow-hidden">
+                    <div className="w-12 h-12 bg-white rounded-xl border border-slate-200 flex items-center justify-center text-slate-700 shadow-sm flex-shrink-0">
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-bold text-slate-900 truncate">{selectedFile.name}</p>
+                      <p className="text-xs text-slate-500 font-medium">{formatSize(selectedFile.size)}</p>
+                    </div>
+                  </div>
+
+                  <button 
+                    type="button"
+                    onClick={removeFile}
+                    className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-200 rounded-lg transition"
+                    title="Quitar archivo"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4">
+               <div className="space-y-2 md:col-span-2">
                 <label className="block text-sm font-semibold text-slate-700">Tipo de recurso</label>
                 <select
                   name="resourceType"
@@ -121,7 +164,7 @@ export default function UserUploadPage() {
                   ))}
                 </select>
               </div>
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 <label className="block text-sm font-semibold text-slate-700">Carrera</label>
                 <select
                   name="career"
@@ -134,7 +177,7 @@ export default function UserUploadPage() {
                     <option key={item} value={item}>{item}</option>
                   ))}
                 </select>
-              </div>
+              </div> */}
             </div>
 
             <div className="grid md:grid-cols-2 gap-4">
@@ -184,28 +227,9 @@ export default function UserUploadPage() {
               />
             </div>
 
-            <div className="space-y-2">
-              <label className="block text-sm font-semibold text-slate-700">Archivo</label>
-              <label className="flex flex-col items-center justify-center w-full border-2 border-dashed border-slate-300 rounded-2xl px-6 py-8 bg-slate-50 hover:bg-slate-100 cursor-pointer transition">
-                <input
-                  name="file"
-                  type="file"
-                  accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,.png,.jpg,.jpeg"
-                  className="hidden"
-                  required
-                  disabled={uploading}
-                />
-                <svg className="w-10 h-10 text-slate-700 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v14m7-7H5" />
-                </svg>
-                <p className="text-slate-900 font-semibold">Selecciona o arrastra un archivo</p>
-                <p className="text-sm text-slate-500">PDF, DOCX, PPTX, TXT, PNG, JPG. Max 20MB.</p>
-              </label>
-            </div>
-
             <button
               type="submit"
-              disabled={uploading}
+              disabled={uploading || !selectedFile}
               className="w-full bg-slate-800 text-white py-3.5 rounded-xl font-semibold hover:bg-slate-900 disabled:bg-slate-400 disabled:cursor-not-allowed transition shadow-lg shadow-slate-800/15 cursor-pointer"
             >
               {uploading ? (
