@@ -1,8 +1,8 @@
 "use client"
 
 import { useMemo, useRef, useState } from 'react'
+import { RESOURCE_TYPES, SEMESTERS } from '../constants'
 import { uploadDocument } from './actions/upload'
-import { RESOURCE_TYPES, SEMESTERS } from './constants'
 
 const resourceOptions = RESOURCE_TYPES
 const semesterOptions = SEMESTERS

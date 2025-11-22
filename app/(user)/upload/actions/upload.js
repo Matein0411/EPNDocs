@@ -3,7 +3,7 @@
 import { createServerActionClient } from '@supabase/auth-helpers-nextjs'
 import { revalidatePath } from 'next/cache'
 import { cookies } from 'next/headers'
-import { RESOURCE_TYPES, SEMESTERS } from '../constants'
+import { RESOURCE_TYPES, SEMESTERS } from '../../constants'
 
 const MAX_FILE_SIZE = 20 * 1024 * 1024 // 20MB
 const ALLOWED_TYPES = [
