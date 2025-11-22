@@ -1,8 +1,8 @@
 "use client"
 
 import { useState } from 'react'
+import { CAREERS } from "../../(user)/constants"
 import { resendEmailConfirmation, signUp } from "../actions/auth"
-import { CAREERS } from "../../user/constants"
 
 export default function SignupPage() {
   const [loading, setLoading] = useState(false)
