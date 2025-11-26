@@ -119,11 +119,11 @@ export default function SignupPage() {
           </div>
           
           <h2 className="text-3xl font-bold text-slate-900 mb-3">
-            Almost done! 📧
+            ¡Casi listo! 📧
           </h2>
           
           <p className="text-slate-600 mb-6">
-            We've sent a confirmation email to verify your account
+            Hemos enviado un correo de confirmación para verificar tu cuenta
           </p>
 
           {resendMessage && (
@@ -139,11 +139,11 @@ export default function SignupPage() {
           <div className="space-y-2 text-sm text-slate-600 text-left bg-slate-50 p-4 rounded-xl mb-6 border border-slate-200">
             <p className="flex items-center gap-2">
               <span>💡</span>
-              <span>Check your spam folder if you don't see it</span>
+              <span>Revisa tu carpeta de spam si no lo encuentras</span>
             </p>
             <p className="flex items-center gap-2">
               <span>⏱️</span>
-              <span>Link expires in 1 hour</span>
+              <span>El enlace expira en 1 hora</span>
             </p>
             <p className="flex items-center gap-2">
               <span>📧</span>
@@ -152,7 +152,7 @@ export default function SignupPage() {
             {resendCount > 0 && (
               <p className="flex items-center gap-2">
                 <span>🔄</span>
-                <span>Resends: {resendCount}/5</span>
+                <span>Reenvíos: {resendCount}/5</span>
               </p>
             )}
           </div>
@@ -168,14 +168,14 @@ export default function SignupPage() {
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                 </svg>
-                Resending...
+                Reenviando...
               </span>
             ) : (
-              'Resend Email'
+              'Reenviar correo'
             )}
           </button>
           <a href="/login" className='w-full bg-slate-800 text-white py-3 rounded-xl font-semibold hover:bg-slate-900 transition block text-center'>
-        Go to Login
+        Ir al inicio de sesión
           </a>
         </div>
       </div>
@@ -244,7 +244,7 @@ return (
         <div className="max-w-md w-full px-8 lg:px-12 py-8">
           <div className="mb-8">
             <h2 className="text-3xl font-bold text-slate-900">
-              Create Account
+              Crear cuenta
             </h2>
           </div>
 
@@ -257,7 +257,7 @@ return (
           <div className="space-y-4">
             <div>
               <label htmlFor="fullName" className="block text-sm font-medium text-slate-700 mb-1.5">
-                Full Name
+                Nombre completo
               </label>
               <input
                 id="fullName"
@@ -273,7 +273,7 @@ return (
 
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1.5">
-                Email
+                Correo electrónico
               </label>
               <input
                 id="email"
@@ -281,7 +281,7 @@ return (
                 type="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                placeholder="first.last@epn.edu.ec"
+                placeholder="nombre.apellido@epn.edu.ec"
                 required
                 className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-slate-800 focus:border-transparent outline-none transition bg-white text-slate-600"
               />
@@ -289,7 +289,7 @@ return (
 
             <div>
               <label htmlFor="career" className="block text-sm font-medium text-slate-700 mb-1.5">
-                Career
+                Carrera
               </label>
               <select
                 id="career"
@@ -299,7 +299,7 @@ return (
                 required
                 className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-slate-800 focus:border-transparent outline-none transition bg-white text-slate-600"
               >
-                <option value="">Select your career</option>
+                <option value="">Selecciona tu carrera</option>
                 {CAREERS.map((career) => (
                   <option key={career} value={career}>
                     {career}
@@ -310,7 +310,7 @@ return (
 
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-1.5">
-                Password
+                Contraseña
               </label>
               <div className="relative">
                 <input
@@ -319,7 +319,7 @@ return (
                   type={showPassword ? "text" : "password"}
                   value={formData.password}
                   onChange={handleInputChange}
-                  placeholder="Minimum 9 characters"
+                  placeholder="Mínimo 9 caracteres"
                   required
                   minLength={9}
                   className="w-full px-4 py-3 pr-12 border border-slate-300 rounded-xl focus:ring-2 focus:ring-slate-800 focus:border-transparent outline-none transition bg-white text-slate-600"
@@ -345,7 +345,7 @@ return (
 
             <div>
               <label htmlFor="confirmPassword" className="block text-sm font-medium text-slate-700 mb-1.5">
-                Confirm Password
+                Confirmar contraseña
               </label>
               <div className="relative">
                 <input
@@ -354,7 +354,7 @@ return (
                   type={showConfirmPassword ? "text" : "password"}
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
-                  placeholder="Repeat your password"
+                  placeholder="Repite tu contraseña"
                   required
                   minLength={9}
                   className="w-full px-4 py-3 pr-12 border border-slate-300 rounded-xl focus:ring-2 focus:ring-slate-800 focus:border-transparent outline-none transition bg-white text-slate-600"
@@ -389,18 +389,18 @@ return (
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                   </svg>
-                  Creating Account...
+                  Creando cuenta...
                 </span>
               ) : (
-                'Create Account'
+                'Crear cuenta'
               )}
             </button>
           </div>
 
           <p className="text-center text-sm text-slate-600 mt-6">
-            Already have an account?{' '}
+            ¿Ya tienes una cuenta?{' '}
             <a href="/login" className="text-slate-900 font-semibold hover:underline">
-              Log in
+              Inicia sesión
             </a>
           </p>
         </div>

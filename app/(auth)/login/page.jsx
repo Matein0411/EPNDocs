@@ -65,10 +65,10 @@ function LoginForm() {
             <img src="/favicon.ico" alt="EPNDocs Logo" className="w-full h-full object-contain" />
           </div>
           <h1 className="text-3xl font-bold text-slate-900 mb-2">
-            Welcome Back
+            Bienvenido de nuevo
           </h1>
           <p className="text-slate-600">
-            Log in to EPNDocs
+            Inicia sesión en EPNDocs
           </p>
         </div>
 
@@ -97,13 +97,13 @@ function LoginForm() {
         <form action={handleSubmit} className="space-y-5">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1.5">
-              Email
+              Correo electrónico
             </label>
             <input
               id="email"
               name="email"
               type="email"
-              placeholder="your-email@epn.edu.ec"
+              placeholder="tu-correo@epn.edu.ec"
               required
               autoComplete="email"
               className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-slate-800 focus:border-transparent outline-none transition bg-white text-slate-700"
@@ -112,7 +112,7 @@ function LoginForm() {
 
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-1.5">
-              Password
+              Contraseña
             </label>
             <input
               id="password"
@@ -136,18 +136,18 @@ function LoginForm() {
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                 </svg>
-                Logging in...
+                Iniciando sesión...
               </span>
             ) : (
-              'Log In'
+              'Iniciar sesión'
             )}
           </button>
         </form>
 
         <p className="text-center text-sm text-slate-600 mt-6">
-          Don't have an account?{' '}
+          ¿No tienes una cuenta?{' '}
           <Link href="/sign-up" className="text-slate-900 font-semibold hover:underline">
-            Sign up
+            Regístrate
           </Link>
         </p>
       </div>
@@ -162,7 +162,7 @@ export default function LoginPage() {
       <div className="min-h-screen flex items-center justify-center bg-slate-100">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-800 mx-auto mb-4"></div>
-          <p className="text-slate-600">Loading...</p>
+          <p className="text-slate-600">Cargando...</p>
         </div>
       </div>
     }>
