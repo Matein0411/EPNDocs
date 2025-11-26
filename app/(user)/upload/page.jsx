@@ -2,7 +2,7 @@
 
 import { useMemo, useRef, useState } from 'react'
 import { RESOURCE_TYPES, SEMESTERS } from '../constants'
-import { uploadDocument } from './actions/upload'
+import { uploadDocument } from '../actions/upload'
 
 const resourceOptions = RESOURCE_TYPES
 const semesterOptions = SEMESTERS

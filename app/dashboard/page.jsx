@@ -2,12 +2,14 @@
 
 import Link from 'next/link';
 import { logout } from '../(auth)/actions/auth';
+import Header from '../components/header';
 
 export default function WorkingPage() {
 
   return (
-
-    <div className="min-h-screen flex items-center justify-center bg-slate-200 px-4 relative overflow-hidden">
+    <>
+      <Header />
+      <div className="min-h-screen flex items-center justify-center bg-slate-200 px-4 relative overflow-hidden">
       {/* Google Fonts */}
       <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
       
@@ -75,5 +77,6 @@ export default function WorkingPage() {
         </div>
       </div>
     </div>
+    </>
   )
 }

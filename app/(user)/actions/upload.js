@@ -3,7 +3,7 @@
 import { createServerActionClient } from '@supabase/auth-helpers-nextjs'
 import { revalidatePath } from 'next/cache'
 import { cookies } from 'next/headers'
-import { RESOURCE_TYPES, SEMESTERS } from '../../constants'
+import { RESOURCE_TYPES, SEMESTERS } from '../constants'
 
 const MAX_FILE_SIZE = 20 * 1024 * 1024 // 20MB
 const ALLOWED_TYPES = [
@@ -111,5 +111,56 @@ export async function uploadDocument(formData) {
   } catch (error) {
     console.error(error)
     return { error: error.message || 'Error procesando la solicitud' }
+  }
+}
+
+export async function getUserProfile() {
+  try {
+    const supabase = await getSupabase()
+    
+    // Obtener usuario autenticado
+    const { data: { user }, error: userError } = await supabase.auth.getUser()
+    if (userError || !user) {
+      return { error: 'No autenticado' }
+    }
+
+    // Obtener perfil del usuario
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', user.id)
+      .single()
+
+    if (profileError) {
+      console.error('Error obteniendo perfil:', profileError)
+      return { error: 'Error obteniendo perfil de usuario' }
+    }
+
+    // Obtener documentos del usuario
+    const { data: documents, error: docsError } = await supabase
+      .from('documents')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+
+    if (docsError) {
+      console.error('Error obteniendo documentos:', docsError)
+      return { error: 'Error obteniendo documentos' }
+    }
+
+    return {
+      user: {
+        id: user.id,
+        email: profile.email || user.email,
+        name: profile.full_name || 'Usuario',
+        career: profile.career || 'No especificada',
+        avatar_url: profile.avatar_url
+      },
+      uploads: documents || []
+    }
+
+  } catch (error) {
+    console.error('Error en getUserProfile:', error)
+    return { error: error.message || 'Error obteniendo datos del usuario' }
   }
 }
