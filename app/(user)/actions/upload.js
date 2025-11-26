@@ -25,44 +25,33 @@ async function getSupabase() {
 }
 
 export async function uploadDocument(formData) {
-  // 1. Extracción de datos (Igual que antes)
   const file = formData.get('file')
   const title = (formData.get('title') || '').toString().trim()
   const description = (formData.get('description') || '').toString().trim()
   const subject = (formData.get('subject') || '').toString().trim()
   const resourceType = (formData.get('resourceType') || '').toString()
   const semester = (formData.get('semester') || '').toString()
-  // const career = (formData.get('career') || '').toString()
 
-  // 2. Validaciones (Igual que antes)
   if (!file || typeof file === 'string') return { error: 'Tienes que seleccionar un archivo' }
   if (!subject) return { error: 'Tienes que ingresar la materia' }
   if (!resourceType || !RESOURCE_TYPES.includes(resourceType)) return { error: 'Tienes que seleccionar el tipo de recurso' }
   if (!semester || !SEMESTERS.includes(semester)) return { error: 'Tienes que seleccionar el semestre' }
-  // if (!career || !CAREERS.includes(career)) return { error: 'Tienes que seleccionar la carrera' }
   if (file.size > MAX_FILE_SIZE) return { error: 'El archivo excede el límite de 20MB' }
   if (file.type && !ALLOWED_TYPES.includes(file.type)) return { error: 'Tipo de archivo no permitido' }
 
   try {
     const supabase = await getSupabase()
     
-    // 3. Verificar Usuario
     const { data: { user }, error: userError } = await supabase.auth.getUser()
     if (userError || !user) return { error: 'No autenticado' }
 
-    // 4. Prepare upload to Storage
     const arrayBuffer = await file.arrayBuffer()
     const buffer = Buffer.from(arrayBuffer)
     
-    // Clean strings for file path
     const sanitizedName = file.name.replace(/[^a-zA-Z0-9.]/g, '-').toLowerCase()
-    // const safeCareer = career.replace(/\s+/g, '-').toLowerCase()
     const safeSubject = subject.replace(/\s+/g, '-').toLowerCase()
-    
-    // Path: user-uploads/user_id/career/subject/timestamp-name
     const path = `user-uploads/${user.id}/${safeSubject}/${Date.now()}-${sanitizedName}`
 
-    // 5. UPLOAD TO STORAGE
     const { error: uploadError } = await supabase.storage
       .from('documents')
       .upload(path, buffer, {
@@ -72,12 +61,10 @@ export async function uploadDocument(formData) {
 
     if (uploadError) return { error: `Error subiendo archivo: ${uploadError.message}` }
 
-    // 6. Obtener URL Pública
     const { data: publicUrlData } = supabase.storage
       .from('documents')
       .getPublicUrl(path)
 
-    // 7. INSERTAR EN BASE DE DATOS
     const { error: dbError } = await supabase
       .from('documents') 
       .insert({
@@ -100,12 +87,7 @@ export async function uploadDocument(formData) {
     
     return {
       success: true,
-      message: 'Documento subido y registrado correctamente',
-      // url: publicUrlData?.publicUrl,
-      // title: title || file.name,
-      // subject, 
-      // resourceType,
-      // semester,
+      message: 'Documento subido y registrado correctamente'
     }
 
   } catch (error) {
@@ -162,5 +144,54 @@ export async function getUserProfile() {
   } catch (error) {
     console.error('Error en getUserProfile:', error)
     return { error: error.message || 'Error obteniendo datos del usuario' }
+  }
+}
+
+export async function getAllDocuments() {
+  try {
+    const supabase = await getSupabase()
+    
+    // Obtener todos los documentos con información del usuario
+    const { data: documents, error: docsError } = await supabase
+      .from('documents')
+      .select(`
+        *,
+        profiles:user_id (
+          full_name,
+          avatar_url
+        )
+      `)
+      .order('created_at', { ascending: false })
+
+    if (docsError) {
+      console.error('Error obteniendo documentos:', docsError)
+      return { error: 'Error obteniendo documentos' }
+    }
+
+    return {
+      documents: documents || []
+    }
+
+  } catch (error) {
+    console.error('Error en getAllDocuments:', error)
+    return { error: error.message || 'Error obteniendo documentos' }
+  }
+}
+
+export async function logoutUser() {
+  try {
+    const supabase = await getSupabase()
+    
+    const { error } = await supabase.auth.signOut()
+    
+    if (error) {
+      console.error('Error cerrando sesión:', error)
+      return { error: 'Error al cerrar sesión' }
+    }
+
+    return { success: true }
+  } catch (error) {
+    console.error('Error en logoutUser:', error)
+    return { error: error.message || 'Error al cerrar sesión' }
   }
 }
