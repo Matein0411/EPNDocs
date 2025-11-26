@@ -50,42 +50,42 @@ export default function FilePreview({ fileUrl, fileName }) {
 
   if (isPdf) {
     return (
-      <div className="flex flex-col items-center bg-slate-50 rounded-lg p-4">
+      <div className="flex flex-col items-center bg-slate-50 rounded-lg p-2 sm:p-4">
         {/* Controls */}
-        <div className="flex items-center gap-4 mb-4 bg-white px-4 py-2 rounded-lg shadow-sm">
+        <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 mb-4 bg-white px-3 sm:px-4 py-3 sm:py-2 rounded-lg shadow-sm w-full sm:w-auto">
           {/* Pagination */}
           <div className="flex items-center gap-2">
             <button
               onClick={() => setPageNumber(prev => Math.max(prev - 1, 1))}
               disabled={pageNumber <= 1}
-              className="px-3 py-1 bg-slate-200 hover:bg-slate-300 disabled:opacity-50 disabled:cursor-not-allowed rounded"
+              className="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 disabled:opacity-50 disabled:cursor-not-allowed rounded text-sm sm:text-base"
             >
               ←
             </button>
-            <span className="text-sm font-medium">
+            <span className="text-xs sm:text-sm font-medium whitespace-nowrap">
               Página {pageNumber} de {numPages || '...'}
             </span>
             <button
               onClick={() => setPageNumber(prev => Math.min(prev + 1, numPages || 1))}
               disabled={pageNumber >= (numPages || 1)}
-              className="px-3 py-1 bg-slate-200 hover:bg-slate-300 disabled:opacity-50 disabled:cursor-not-allowed rounded"
+              className="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 disabled:opacity-50 disabled:cursor-not-allowed rounded text-sm sm:text-base"
             >
               →
             </button>
           </div>
 
           {/* Zoom */}
-          <div className="flex items-center gap-2 border-l pl-4">
+          <div className="flex items-center gap-2 sm:border-l sm:pl-4">
             <button
               onClick={() => setScale(prev => Math.max(prev - 0.2, 0.5))}
-              className="px-3 py-1 bg-slate-200 hover:bg-slate-300 rounded"
+              className="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 rounded text-sm sm:text-base"
             >
               -
             </button>
-            <span className="text-sm font-medium">{Math.round(scale * 100)}%</span>
+            <span className="text-xs sm:text-sm font-medium">{Math.round(scale * 100)}%</span>
             <button
               onClick={() => setScale(prev => Math.min(prev + 0.2, 2.0))}
-              className="px-3 py-1 bg-slate-200 hover:bg-slate-300 rounded"
+              className="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 rounded text-sm sm:text-base"
             >
               +
             </button>
@@ -93,7 +93,7 @@ export default function FilePreview({ fileUrl, fileName }) {
         </div>
 
         {/* PDF Viewer */}
-        <div className="bg-white rounded-lg shadow-lg overflow-auto max-h-[70vh]">
+        <div className="bg-white rounded-lg shadow-lg overflow-auto max-h-[60vh] sm:max-h-[70vh] w-full">
           {error ? (
             <div className="flex flex-col items-center justify-center p-12">
               <div className="text-red-600 mb-4">{error}</div>

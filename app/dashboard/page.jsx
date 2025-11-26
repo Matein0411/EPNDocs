@@ -14,7 +14,7 @@ export default function DashboardPage() {
   const [documents, setDocuments] = useState([])
   const [filteredDocs, setFilteredDocs] = useState([])
   const [loading, setLoading] = useState(true)
-  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   
   // Filtros
   const [filters, setFilters] = useState({
@@ -111,12 +111,20 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-slate-50">
       <Header />
 
-      <div className="flex">
+      <div className="flex relative">
+        {/* Overlay para móviles */}
+        {sidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+
         {/* Sidebar */}
         <aside
           className={`${
-            sidebarOpen ? 'w-64' : 'w-0'
-          } bg-white border-r border-slate-200 transition-all duration-300 overflow-hidden sticky top-16 h-[calc(100vh-4rem)]`}
+            sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+          } fixed lg:sticky top-0 lg:top-16 left-0 w-64 lg:w-64 bg-white border-r border-slate-200 transition-transform lg:transition-all duration-300 h-screen lg:h-[calc(100vh-4rem)] z-50 overflow-y-auto`}
         >
           <div className="p-6">
             {/* User Profile */}
@@ -178,13 +186,14 @@ export default function DashboardPage() {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 p-6">
+        <main className="flex-1 w-full p-4 sm:p-6">
           {/* Toggle Sidebar Button */}
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="mb-4 p-2 rounded-lg hover:bg-slate-200 transition"
+            className="mb-4 p-2.5 rounded-lg bg-white hover:bg-slate-100 border border-slate-300 shadow-sm transition lg:hover:bg-slate-200 lg:border-0 lg:shadow-none"
+            aria-label="Toggle sidebar"
           >
-            <svg className="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
