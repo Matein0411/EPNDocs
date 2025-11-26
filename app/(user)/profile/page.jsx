@@ -1,12 +1,20 @@
 // app/(user)/profile/page.jsx
 'use client'
 
+import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Header from '../../components/header'
 import { getUserProfile } from '../actions/upload'
+
+const DocumentThumbnail = dynamic(() => import('../../components/DocumentThumbnail'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-48 bg-slate-100 rounded-t-lg animate-pulse" />
+  ),
+})
 
 export default function UserProfile() {
   const router = useRouter()
@@ -112,47 +120,41 @@ export default function UserProfile() {
 
         {/* Documents Grid */}
         {uploads.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {uploads.map((doc) => (
-              <a
+              <Link
                 key={doc.id}
-                href={doc.file_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-white rounded-lg shadow hover:shadow-md transition p-4 border border-slate-200 hover:border-slate-300 group"
+                href={`/document/${doc.id}`}
+                className="bg-white rounded-lg shadow hover:shadow-lg transition-all p-4 border border-slate-200 hover:border-slate-300 group"
               >
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-slate-200 transition">
-                    <svg
-                      className="w-6 h-6 text-slate-700"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                      />
-                    </svg>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-slate-900 truncate group-hover:text-slate-700 transition">
-                      {doc.title}
-                    </h3>
-                    <p className="text-sm text-slate-600">{doc.subject}</p>
-                    <p className="text-xs text-slate-500 mt-1">
-                      {doc.resource_type} • {doc.semester}
-                    </p>
-                  </div>
+                {/* Thumbnail */}
+                <div className="w-full h-48 mb-3 rounded-lg overflow-hidden bg-slate-100">
+                  <DocumentThumbnail fileUrl={doc.file_url} filePath={doc.file_path} />
                 </div>
+
+                {/* Title and Subject */}
+                <div className="mb-3">
+                  <h3 className="font-bold text-slate-900 truncate group-hover:text-slate-700 transition mb-1">
+                    {doc.title}
+                  </h3>
+                  <p className="text-sm text-slate-600 font-medium">{doc.subject}</p>
+                </div>
+
                 {doc.description && (
-                  <p className="text-sm text-slate-600 mt-3 line-clamp-2">
+                  <p className="text-sm text-slate-600 mb-3 line-clamp-2">
                     {doc.description}
                   </p>
                 )}
-              </a>
+
+                <div className="flex items-center justify-between pt-3 border-t border-slate-200">
+                  <span className="text-xs text-slate-500 font-medium">
+                    {doc.resource_type}
+                  </span>
+                  <span className="text-xs text-slate-500">
+                    {doc.semester}
+                  </span>
+                </div>
+              </Link>
             ))}
           </div>
         ) : (

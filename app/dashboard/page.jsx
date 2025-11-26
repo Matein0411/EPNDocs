@@ -1,5 +1,6 @@
 "use client"
 
+import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -8,13 +9,20 @@ import { getAllDocuments, getUserProfile } from '../(user)/actions/upload'
 import { RESOURCE_TYPES, SEMESTERS } from '../(user)/constants'
 import Header from '../components/header'
 
+const DocumentThumbnail = dynamic(() => import('../components/DocumentThumbnail'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-48 bg-slate-100 rounded-lg animate-pulse" />
+  ),
+})
+
 export default function DashboardPage() {
   const router = useRouter()
   const [user, setUser] = useState(null)
   const [documents, setDocuments] = useState([])
   const [filteredDocs, setFilteredDocs] = useState([])
   const [loading, setLoading] = useState(true)
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(true)
   
   // Filtros
   const [filters, setFilters] = useState({
@@ -123,8 +131,8 @@ export default function DashboardPage() {
         {/* Sidebar */}
         <aside
           className={`${
-            sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-          } fixed lg:sticky top-0 lg:top-16 left-0 w-64 lg:w-64 bg-white border-r border-slate-200 transition-transform lg:transition-all duration-300 h-screen lg:h-[calc(100vh-4rem)] z-50 overflow-y-auto`}
+            sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          } fixed lg:sticky top-0 lg:top-16 left-0 w-64 bg-white border-r border-slate-200 transition-transform duration-300 h-screen lg:h-[calc(100vh-4rem)] z-50 overflow-y-auto`}
         >
           <div className="p-6">
             {/* User Profile */}
@@ -266,30 +274,22 @@ export default function DashboardPage() {
                     <Link
                       key={doc.id}
                       href={`/document/${doc.id}`}
-                      className="shrink-0 w-72 bg-slate-50 rounded-lg shadow hover:shadow-md transition p-4 border border-slate-200 hover:border-slate-300 group"
+                      className="shrink-0 w-72 bg-white rounded-lg shadow hover:shadow-lg transition-all p-4 border border-slate-200 hover:border-slate-300 group"
                     >
-                      <div className="flex items-start gap-3 mb-3">
-                        <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center shrink-0 group-hover:bg-slate-100 transition shadow-sm">
-                          <svg
-                            className="w-7 h-7 text-slate-700"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                            />
-                          </svg>
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-bold text-slate-900 truncate group-hover:text-slate-700 transition">
-                            {doc.title}
-                          </h3>
-                          <p className="text-sm text-slate-600 font-medium mt-1">{doc.subject}</p>
-                        </div>
+                      {/* Thumbnail */}
+                      <div className="w-full h-48 mb-3 rounded-lg overflow-hidden bg-slate-100">
+                        <DocumentThumbnail 
+                          fileUrl={doc.file_url}
+                          filePath={doc.file_path}
+                        />
+                      </div>
+
+                      {/* Title and Subject */}
+                      <div className="mb-3">
+                        <h3 className="font-bold text-slate-900 truncate group-hover:text-slate-700 transition mb-1">
+                          {doc.title}
+                        </h3>
+                        <p className="text-sm text-slate-600 font-medium">{doc.subject}</p>
                       </div>
 
                       {doc.description && (
